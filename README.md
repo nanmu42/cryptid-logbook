@@ -1,2 +1,3 @@
 # cryptid-logbook
-Game logbook for Cryptid, the board game
+
+Game logbook for Cryptid, the board game.
