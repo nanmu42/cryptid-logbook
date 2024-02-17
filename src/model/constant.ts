@@ -14,6 +14,38 @@ export const PLAYER_COLORS = [
   PlayerColor.PURPLE,
 ]
 
+type ColorNames = {
+  [key in PlayerColor]: string
+}
+
+const chineseColorNames: ColorNames = {
+  [PlayerColor.RED]: '红',
+  [PlayerColor.GREEN]: '绿',
+  [PlayerColor.BLUE]: '蓝',
+  [PlayerColor.BROWN]: '棕',
+  [PlayerColor.PURPLE]: '紫',
+}
+
+export function getChineseColorName(color: PlayerColor): string {
+  return chineseColorNames[color]
+}
+
+type ColorHexes = {
+  [key in PlayerColor]: string
+}
+
+const colorHexes: ColorHexes = {
+  [PlayerColor.RED]: '#9e0624',
+  [PlayerColor.GREEN]: '#1ba109',
+  [PlayerColor.BLUE]: '#124fc0',
+  [PlayerColor.BROWN]: '#6b4d16',
+  [PlayerColor.PURPLE]: '#9510a1',
+}
+
+export function getColorHex(color: PlayerColor): string {
+  return colorHexes[color]
+}
+
 export type FlattenedClue = ClueOneOfTwoTerrain | ClueWithin1 | ClueWithin2 | ClueWithin3
 
 export type Clue = ClueTerrain | FlattenedClue

@@ -1,11 +1,17 @@
 <template>
-  <NSelect :multiple="props.multiple"></NSelect>
+  <NSelect
+    :multiple="props.multiple"
+    :options="options"
+    :render-label="renderLabel"
+    :render-tag="renderTag"
+    v-model:value="model"
+  ></NSelect>
 </template>
 
 <script setup lang="ts">
-import { PLAYER_COLORS, PlayerColor } from '@/model/constant'
-import { NSelect } from 'naive-ui'
-import { computed } from 'vue'
+import { PLAYER_COLORS, PlayerColor, getChineseColorName, getColorHex } from '@/model/constant'
+import { NAvatar, NSelect, NTag, type SelectRenderLabel, type SelectRenderTag } from 'naive-ui'
+import { computed, h } from 'vue'
 
 interface Props {
   colorScope?: PlayerColor[]
@@ -14,28 +20,83 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const model = defineModel<PlayerColor | PlayerColor[]>('value')
+
 const options = computed(() => {
-  let scope = props.colorScope ?? PLAYER_COLORS
+  const scope = props.colorScope ?? PLAYER_COLORS
   return scope.map((color) => ({
-    label: colorName(color),
+    label: getChineseColorName(color),
     value: color,
   }))
 })
 
-function colorName(color: PlayerColor): string {
-  switch (color) {
-    case PlayerColor.RED:
-      return '红'
-    case PlayerColor.GREEN:
-      return '绿'
-    case PlayerColor.BLUE:
-      return '蓝'
-    case PlayerColor.BROWN:
-      return '棕'
-    case PlayerColor.PURPLE:
-      return '紫'
-    default:
-      throw new Error('ColorSelect: Unknown color: ' + color)
-  }
+const renderLabel: SelectRenderLabel = (option) => {
+  return h(
+    'div',
+    {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+      },
+    },
+    [
+      h(NAvatar, {
+        color: getColorHex(option.value as PlayerColor),
+        round: true,
+        size: 'small',
+      }),
+      h(
+        'div',
+        {
+          style: {
+            marginLeft: '12px',
+            padding: '4px 0',
+          },
+        },
+        [h('div', null, [option.label as string])],
+      ),
+    ],
+  )
+}
+
+const renderTag: SelectRenderTag = ({ option, handleClose }) => {
+  return h(
+    NTag,
+    {
+      style: {
+        margin: '1px 0 0 0',
+        padding: '0 0.8rem 0 0.6rem',
+      },
+      round: true,
+      closable: props.multiple,
+      onClose: (e) => {
+        e.stopPropagation()
+        handleClose()
+      },
+    },
+    {
+      default: () =>
+        h(
+          'div',
+          {
+            style: {
+              display: 'flex',
+              alignItems: 'center',
+            },
+          },
+          [
+            h(NAvatar, {
+              color: getColorHex(option.value as PlayerColor),
+              round: true,
+              size: 22,
+              style: {
+                marginRight: '4px',
+              },
+            }),
+            option.label as string,
+          ],
+        ),
+    },
+  )
 }
 </script>
