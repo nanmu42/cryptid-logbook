@@ -5,30 +5,64 @@
     :render-label="renderLabel"
     :render-tag="renderTag"
     v-model:value="model"
+    clearable
   ></NSelect>
 </template>
 
 <script setup lang="ts">
 import { PLAYER_COLORS, PlayerColor, getChineseColorName, getColorHex } from '@/model/constant'
 import { NAvatar, NSelect, NTag, type SelectRenderLabel, type SelectRenderTag } from 'naive-ui'
-import { computed, h } from 'vue'
+import { computed, h, watch } from 'vue'
 
 interface Props {
-  colorScope?: PlayerColor[]
+  disabledColors?: PlayerColor[]
   multiple?: boolean
 }
 
 const props = defineProps<Props>()
 
-const model = defineModel<PlayerColor | PlayerColor[]>('value')
+const model = defineModel<null | PlayerColor | PlayerColor[]>('value')
 
 const options = computed(() => {
-  const scope = props.colorScope ?? PLAYER_COLORS
+  let scope = PLAYER_COLORS
+  if (props.disabledColors) {
+    scope = scope.filter((color) => !props.disabledColors!.includes(color))
+  }
+
   return scope.map((color) => ({
     label: getChineseColorName(color),
     value: color,
   }))
 })
+
+watch(
+  options,
+  () => {
+    if (!props.multiple) {
+      const selectedIndex = options.value.findIndex((option) => option.value === model.value)
+      if (selectedIndex === -1) {
+        model.value = null
+      }
+
+      return
+    }
+
+    if (!model.value || model.value.length === 0) {
+      return
+    }
+    const validChoices: PlayerColor[] = []
+    for (const choice of model.value as PlayerColor[]) {
+      if (options.value.some((option) => option.value === choice)) {
+        validChoices.push(choice)
+      }
+    }
+
+    if (validChoices.length !== model.value.length) {
+      model.value = validChoices
+    }
+  },
+  { deep: true, immediate: true },
+)
 
 const renderLabel: SelectRenderLabel = (option) => {
   return h(
