@@ -1,5 +1,5 @@
 <template>
-  <footer class="grid grid-cols-1 place-content-center gap-3 text-center">
+  <footer class="grid grid-cols-1 place-content-center gap-2 text-center">
     <NButton text @click="handleShare">
       <template #icon>
         <NIcon>
@@ -16,15 +16,22 @@
       </template>
       Open source on GitHub
     </NButton>
-    <NButton text @click="handleGreeting"> Copyright © 2024 Zhennan "Nanmu Lee" Li </NButton>
-    <ShareModal v-model:show="showShareModal"></ShareModal>
+    <NButton text @click="handleGreeting">
+      <template #icon>
+        <NIcon>
+          <CopyrightRegular />
+        </NIcon>
+      </template>
+      Copyright 2024 Zhennan "Nanmu Lee" Li
+    </NButton>
+    <ShareModal class="max-w-[480px]" v-model:show="showShareModal"></ShareModal>
   </footer>
 </template>
 
 <script setup lang="ts">
 import { NIcon, NButton, useMessage } from 'naive-ui'
 import ShareModal from '@/components/ShareModal.vue'
-import { Github, Qrcode } from '@vicons/fa'
+import { Github, Qrcode, CopyrightRegular } from '@vicons/fa'
 import { ref } from 'vue'
 
 const notify = useMessage()
