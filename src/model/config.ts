@@ -44,6 +44,15 @@ export function checkAndCleanConfig(c: Config) {
     if (!c.playerClue2) {
       throw new Error('第二条线索没有设置好')
     }
+    if (
+      c.playerClue1.clue === c.playerClue2.clue &&
+      c.playerClue1.inverted === c.playerClue2.inverted
+    ) {
+      throw new Error('请检查你的两条线索是否相同')
+    }
+    if (c.playerClue1.clue === c.playerClue2.clue) {
+      throw new Error('请检查你的两条线索是否冲突')
+    }
   } else {
     c.playerColor2 = null
     c.playerClue2 = null

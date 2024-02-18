@@ -1,5 +1,5 @@
 <template>
-  <main class="p-4">
+  <main class="px-4">
     <h2>Cryptid桌游小抄</h2>
     <NForm label-placement="top" :model="config">
       <div class="grid place-content-end mb-2">
@@ -89,7 +89,7 @@
         <NButton type="primary" size="large" @click="handleSubmit">
           <template #icon>
             <NIcon>
-              <EmojiLaugh24Regular />
+              <LaughWinkRegular />
             </NIcon>
           </template>
           来吧，开始！
@@ -97,6 +97,7 @@
       </div>
     </NForm>
   </main>
+  <PageFooter class="mt-12 mb-8"></PageFooter>
 </template>
 
 <script setup lang="ts">
@@ -118,10 +119,11 @@ import {
   checkAndCleanConfig,
 } from '@/model/config'
 import { computed, ref, type Ref } from 'vue'
-import { EmojiLaugh24Regular } from '@vicons/fluent'
+import { LaughWinkRegular } from '@vicons/fa'
 import ColorSelect from '@/components/ColorSelect.vue'
 import FlattenedClueSelect from '@/components/FlattenedClueSelect.vue'
 import type { PlayerColor } from '@/model/constant'
+import PageFooter from '@/components/PageFooter.vue'
 // TODO: 分享这个页面：显示二维码
 
 const notify = useMessage()
