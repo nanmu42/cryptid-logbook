@@ -1,5 +1,5 @@
 <template>
-  <footer class="grid grid-cols-1 place-content-center gap-2 text-center">
+  <footer class="grid grid-cols-1 place-content-center gap-3 text-center">
     <NButton text @click="handleShare">
       <template #icon>
         <NIcon>
@@ -16,16 +16,18 @@
       </template>
       Open source on GitHub
     </NButton>
-    <p class="mt-2">Copyright © 2024 Zhennan "Nanmu Lee" Li</p>
+    <NButton text @click="handleGreeting"> Copyright © 2024 Zhennan "Nanmu Lee" Li </NButton>
     <ShareModal v-model:show="showShareModal"></ShareModal>
   </footer>
 </template>
 
 <script setup lang="ts">
-import { NIcon, NButton } from 'naive-ui'
+import { NIcon, NButton, useMessage } from 'naive-ui'
 import ShareModal from '@/components/ShareModal.vue'
 import { Github, Qrcode } from '@vicons/fa'
 import { ref } from 'vue'
+
+const notify = useMessage()
 
 const showShareModal = ref(false)
 
@@ -35,5 +37,20 @@ function handleShare() {
 
 function openNewTab(url: string) {
   window.open(url, '_blank')
+}
+
+function handleGreeting() {
+  const now = new Date()
+  const hour = now.getHours()
+
+  if (hour > 23 && hour < 6) {
+    notify.info('游戏好玩，但是不要熬夜哟。')
+  } else if (hour < 12) {
+    notify.info('早上好！今天天气好么？')
+  } else if (hour < 18) {
+    notify.info('下午好！正是让人开心的时候不是么？')
+  } else {
+    notify.info('晚上好！祝你今晚玩得开心！')
+  }
 }
 </script>
