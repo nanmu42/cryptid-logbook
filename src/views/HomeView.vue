@@ -124,7 +124,6 @@ import ColorSelect from '@/components/ColorSelect.vue'
 import FlattenedClueSelect from '@/components/FlattenedClueSelect.vue'
 import type { PlayerColor } from '@/model/constant'
 import PageFooter from '@/components/PageFooter.vue'
-// TODO: 分享这个页面：显示二维码
 
 const notify = useMessage()
 

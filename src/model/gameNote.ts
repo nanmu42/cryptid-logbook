@@ -1,6 +1,6 @@
 import type { PlayerColor, Clue } from './constant'
 
-export interface Game {
+export interface GameNote {
   Clues: { [key in PlayerColor]?: RivalClues }
 }
 

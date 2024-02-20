@@ -51,7 +51,7 @@ function handleGreeting() {
   const hour = now.getHours()
 
   if (hour > 23 && hour < 6) {
-    notify.info('游戏好玩，但是不要熬夜哟。')
+    notify.info('游戏好玩，但最好不要熬夜哟。')
   } else if (hour < 12) {
     notify.info('早上好！今天天气好么？')
   } else if (hour < 18) {
