@@ -22,7 +22,7 @@
           <CopyrightRegular />
         </NIcon>
       </template>
-      Copyright 2024 Zhennan "Nanmu Lee" Li
+      Copyright 2024 Zhennan LI
     </NButton>
     <ShareModal class="max-w-[480px]" v-model:show="showShareModal"></ShareModal>
   </footer>

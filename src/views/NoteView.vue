@@ -7,16 +7,24 @@
     :modules="swiperModules"
     class="full-height"
   >
-    <!-- TODO: resolve CSS issue to display pagination -->
-    <SwiperSlide class="full-page">Slide 1</SwiperSlide>
-    <SwiperSlide class="full-page">Slide 2</SwiperSlide>
-    <SwiperSlide class="full-page">Slide 3</SwiperSlide>
+    <SwiperSlide class="full-page final-clues-container">
+      <FinalClues />
+    </SwiperSlide>
+    <SwiperSlide
+      v-for="color in config.rivalColors"
+      :key="color"
+      class="full-page"
+      :style="{ backgroundColor: getColorHex(color) }"
+    >
+      <GameNoteComponent />
+    </SwiperSlide>
   </Swiper>
 </template>
 
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
+import 'swiper/css/pagination'
 
 import { Pagination } from 'swiper/modules'
 import { type PaginationOptions } from 'swiper/types'
@@ -26,6 +34,8 @@ import { persistentStorage } from '@/model/storage'
 import { useRouter } from 'vue-router'
 import { generateDefaultGameNote, type GameNote } from '@/model/gameNote'
 import { getColorHex } from '@/model/constant'
+import FinalClues from '@/components/FinalClues.vue'
+import GameNoteComponent from '@/components/GameNote.vue'
 
 const swiperModules = [Pagination]
 const swiperPagination: PaginationOptions = {
@@ -60,7 +70,7 @@ function resetAndGoHomeView() {
 
 function backgroundColorForIndex(index: number): string {
   if (index === 0) {
-    return '#111111'
+    return '#141414'
   }
 
   return getColorHex(config.value.rivalColors[index - 1])
@@ -75,5 +85,24 @@ function backgroundColorForIndex(index: number): string {
 .full-page {
   width: 100%;
   height: 100%;
+}
+
+.final-clues-container {
+  background-color: #141414;
+}
+
+.swiper-pagination-bullet {
+  margin: 0 0.4rem !important;
+  border: #ffffff 1px solid;
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  text-align: center;
+  line-height: 1rem;
+  transition: transform 300ms;
+}
+
+.swiper-pagination-bullet-active {
+  transform: scale(1.2);
 }
 </style>

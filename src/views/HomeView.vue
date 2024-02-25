@@ -177,3 +177,5 @@ function handleSubmit() {
   router.replace({ name: 'note' })
 }
 </script>
+
+<style scoped></style>

@@ -7,7 +7,7 @@
         <NButton type="primary" ghost @click="handleCopyURL"> 复制 </NButton>
       </NInputGroup>
       <hr />
-      <p>扫码也可以：</p>
+      <p>让朋友直接扫码也可以：</p>
       <NQrCode class="m-auto" :value="hostURL" :size="240"></NQrCode>
     </div>
   </NModal>
