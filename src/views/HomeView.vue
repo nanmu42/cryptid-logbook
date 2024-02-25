@@ -112,20 +112,18 @@ import {
   NIcon,
   useMessage,
 } from 'naive-ui'
-import {
-  generateDefaultConfig,
-  type Config,
-  type PlayerClue,
-  checkAndCleanConfig,
-} from '@/model/config'
+import { generateDefaultConfig, type Config, type PlayerClue } from '@/model/config'
 import { computed, ref, type Ref } from 'vue'
 import { LaughWinkRegular } from '@vicons/fa'
 import ColorSelect from '@/components/ColorSelect.vue'
 import FlattenedClueSelect from '@/components/FlattenedClueSelect.vue'
 import type { PlayerColor } from '@/model/constant'
 import PageFooter from '@/components/PageFooter.vue'
+import { persistentStorage } from '@/model/storage'
+import { useRouter } from 'vue-router'
 
 const notify = useMessage()
+const router = useRouter()
 
 const config: Ref<Config> = ref(generateDefaultConfig())
 
@@ -166,12 +164,16 @@ const rivalDisabledColors = computed<PlayerColor[]>(() => {
 
 function handleSubmit() {
   try {
-    checkAndCleanConfig(config.value)
+    persistentStorage.markGameOn(config.value)
   } catch (err: Error | any) {
     notify.error(err.message, {
       closable: true,
       duration: 5000,
     })
+
+    return
   }
+
+  router.replace({ name: 'note' })
 }
 </script>

@@ -1,5 +1,5 @@
-import { type GameNote } from './gameNote'
-import { type Config } from './config'
+import { generateDefaultGameNote, type GameNote } from './gameNote'
+import { checkAndCleanConfig, type Config } from './config'
 
 const KEY_GAME_STARTED_AT = 'gameStartedAt'
 const KEY_CONFIG = 'config'
@@ -9,20 +9,45 @@ class PersistentStorage {
   private readonly storage: Storage = window.localStorage
 
   public markGameOn(config: Config): void {
-    // TODO: save config, clear game note, refresh game started_at
+    checkAndCleanConfig(config)
+    this.storage.setItem(KEY_CONFIG, JSON.stringify(config))
+    this.storage.setItem(KEY_GAME_NOTE, JSON.stringify(generateDefaultGameNote(config.rivalColors)))
+    this.storage.setItem(KEY_GAME_STARTED_AT, new Date().toString())
   }
 
   public markGameOff(): void {
-    // TODO: clear game note, game started_at
+    this.storage.removeItem(KEY_GAME_STARTED_AT)
+    this.storage.removeItem(KEY_CONFIG)
+    this.storage.removeItem(KEY_GAME_NOTE)
   }
 
-  public getGameStartedAt(): Date | null {}
+  public getGameStartedAt(): Date | null {
+    const startedAt = this.storage.getItem(KEY_GAME_STARTED_AT)
+    if (startedAt) {
+      return new Date(startedAt)
+    }
+    return null
+  }
 
-  public getConfig(): Config | null {}
+  public getConfig(): Config | null {
+    const config = this.storage.getItem(KEY_CONFIG)
+    if (config) {
+      return JSON.parse(config)
+    }
+    return null
+  }
 
-  public clearConfig(): void {}
+  public getGameNote(): GameNote | null {
+    const note = this.storage.getItem(KEY_GAME_NOTE)
+    if (note) {
+      return JSON.parse(note)
+    }
+    return null
+  }
 
-  public getGameNote(): GameNote | null {}
-
-  public setGameNote(note: GameNote): void {}
+  public setGameNote(note: GameNote): void {
+    this.storage.setItem(KEY_GAME_NOTE, JSON.stringify(note))
+  }
 }
+
+export const persistentStorage = new PersistentStorage()
