@@ -7,7 +7,7 @@
     :modules="swiperModules"
     class="full-height"
   >
-    <SwiperSlide class="full-page final-clues-container">
+    <SwiperSlide class="full-page">
       <FinalClues />
     </SwiperSlide>
     <SwiperSlide
@@ -87,10 +87,6 @@ function backgroundColorForIndex(index: number): string {
   height: 100%;
 }
 
-.final-clues-container {
-  background-color: #141414;
-}
-
 .swiper-pagination-bullet {
   margin: 0 0.4rem !important;
   border: #ffffff 1px solid;
@@ -100,6 +96,7 @@ function backgroundColorForIndex(index: number): string {
   text-align: center;
   line-height: 1rem;
   transition: transform 300ms;
+  opacity: 1;
 }
 
 .swiper-pagination-bullet-active {

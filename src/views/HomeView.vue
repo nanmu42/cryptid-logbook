@@ -97,7 +97,7 @@
       </div>
     </NForm>
   </main>
-  <PageFooter class="mt-12 mb-8"></PageFooter>
+  <PageFooter class="mt-16 mb-8"></PageFooter>
 </template>
 
 <script setup lang="ts">
