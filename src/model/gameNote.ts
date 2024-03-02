@@ -1,12 +1,4 @@
-import {
-  type PlayerColor,
-  type FlattenedClue,
-  ClueTerrain,
-  ClueOneOfTwoTerrain,
-  ClueWithin1,
-  ClueWithin2,
-  ClueWithin3,
-} from './constant'
+import { type PlayerColor, type FlattenedClue, type ClueTerrain } from './constant'
 
 export interface GameNote {
   clues: { [key in PlayerColor]?: RivalClues }
@@ -26,17 +18,23 @@ export interface TerrainBusterClues {
   negative: { [key in ClueTerrain]: boolean }
 }
 
+const clueStateList = [
+  // all clue begins with this state
+  'neutral',
+  // manual excluded
+  'excluded',
+  // excluded by policy
+  'autoExcluded',
+  // manual-labeled
+  'suspicious',
+  // manual-labeled
+  'confirmed',
+]
+
+export type ClueState = (typeof clueStateList)[number]
+
 export type RivalClue = {
-  [key in FlattenedClue]:  // all clue begins with this state
-    | 'neutral'
-    // manual excluded
-    | 'excluded'
-    // excluded by policy
-    | 'autoExcluded'
-    // manual-labeled
-    | 'suspicious'
-    // manual-labeled
-    | 'confirmed'
+  [key in FlattenedClue]: ClueState
 }
 
 export function generateDefaultGameNote(colors: PlayerColor[]): GameNote {
@@ -54,71 +52,71 @@ export function generateDefaultGameNote(colors: PlayerColor[]): GameNote {
 function generateDefaultRivalClues(): RivalClues {
   const clues: RivalClues = {
     in: {
-      [ClueOneOfTwoTerrain.FORREST_OR_DESERT]: 'neutral',
-      [ClueOneOfTwoTerrain.FORREST_OR_LAKE]: 'neutral',
-      [ClueOneOfTwoTerrain.FORREST_OR_SWAMP]: 'neutral',
-      [ClueOneOfTwoTerrain.FORREST_OR_MOUNTAIN]: 'neutral',
-      [ClueOneOfTwoTerrain.DESERT_OR_LAKE]: 'neutral',
-      [ClueOneOfTwoTerrain.DESERT_OR_SWAMP]: 'neutral',
-      [ClueOneOfTwoTerrain.DESERT_OR_MOUNTAIN]: 'neutral',
-      [ClueOneOfTwoTerrain.LAKE_OR_SWAMP]: 'neutral',
-      [ClueOneOfTwoTerrain.LAKE_OR_MOUNTAIN]: 'neutral',
-      [ClueOneOfTwoTerrain.SWAMP_OR_MOUNTAIN]: 'neutral',
-      [ClueWithin1.WITHIN1FORREST]: 'neutral',
-      [ClueWithin1.WITHIN1DESERT]: 'neutral',
-      [ClueWithin1.WITHIN1LAKE]: 'neutral',
-      [ClueWithin1.WITHIN1SWAMP]: 'neutral',
-      [ClueWithin1.WITHIN1MOUNTAIN]: 'neutral',
-      [ClueWithin1.WITHIN1ANIMAL]: 'neutral',
-      [ClueWithin2.WITHIN2STONE]: 'neutral',
-      [ClueWithin2.WITHIN2SHACK]: 'neutral',
-      [ClueWithin2.WITHIN2COUGAR]: 'neutral',
-      [ClueWithin2.WITHIN2BEAR]: 'neutral',
-      [ClueWithin3.WITHIN3BLUE]: 'neutral',
-      [ClueWithin3.WITHIN3WHITE]: 'neutral',
-      [ClueWithin3.WITHIN3GREEN]: 'neutral',
-      [ClueWithin3.WITHIN3BLACK]: 'neutral',
+      FORREST_OR_DESERT: 'neutral',
+      FORREST_OR_LAKE: 'neutral',
+      FORREST_OR_SWAMP: 'neutral',
+      FORREST_OR_MOUNTAIN: 'neutral',
+      DESERT_OR_LAKE: 'neutral',
+      DESERT_OR_SWAMP: 'neutral',
+      DESERT_OR_MOUNTAIN: 'neutral',
+      LAKE_OR_SWAMP: 'neutral',
+      LAKE_OR_MOUNTAIN: 'neutral',
+      SWAMP_OR_MOUNTAIN: 'neutral',
+      WITHIN1FORREST: 'neutral',
+      WITHIN1DESERT: 'neutral',
+      WITHIN1LAKE: 'neutral',
+      WITHIN1SWAMP: 'neutral',
+      WITHIN1MOUNTAIN: 'neutral',
+      WITHIN1ANIMAL: 'neutral',
+      WITHIN2STONE: 'neutral',
+      WITHIN2SHACK: 'neutral',
+      WITHIN2COUGAR: 'neutral',
+      WITHIN2BEAR: 'neutral',
+      WITHIN3BLUE: 'neutral',
+      WITHIN3WHITE: 'neutral',
+      WITHIN3GREEN: 'neutral',
+      WITHIN3BLACK: 'neutral',
     },
     notIn: {
-      [ClueOneOfTwoTerrain.FORREST_OR_DESERT]: 'neutral',
-      [ClueOneOfTwoTerrain.FORREST_OR_LAKE]: 'neutral',
-      [ClueOneOfTwoTerrain.FORREST_OR_SWAMP]: 'neutral',
-      [ClueOneOfTwoTerrain.FORREST_OR_MOUNTAIN]: 'neutral',
-      [ClueOneOfTwoTerrain.DESERT_OR_LAKE]: 'neutral',
-      [ClueOneOfTwoTerrain.DESERT_OR_SWAMP]: 'neutral',
-      [ClueOneOfTwoTerrain.DESERT_OR_MOUNTAIN]: 'neutral',
-      [ClueOneOfTwoTerrain.LAKE_OR_SWAMP]: 'neutral',
-      [ClueOneOfTwoTerrain.LAKE_OR_MOUNTAIN]: 'neutral',
-      [ClueOneOfTwoTerrain.SWAMP_OR_MOUNTAIN]: 'neutral',
-      [ClueWithin1.WITHIN1FORREST]: 'neutral',
-      [ClueWithin1.WITHIN1DESERT]: 'neutral',
-      [ClueWithin1.WITHIN1LAKE]: 'neutral',
-      [ClueWithin1.WITHIN1SWAMP]: 'neutral',
-      [ClueWithin1.WITHIN1MOUNTAIN]: 'neutral',
-      [ClueWithin1.WITHIN1ANIMAL]: 'neutral',
-      [ClueWithin2.WITHIN2STONE]: 'neutral',
-      [ClueWithin2.WITHIN2SHACK]: 'neutral',
-      [ClueWithin2.WITHIN2COUGAR]: 'neutral',
-      [ClueWithin2.WITHIN2BEAR]: 'neutral',
-      [ClueWithin3.WITHIN3BLUE]: 'neutral',
-      [ClueWithin3.WITHIN3WHITE]: 'neutral',
-      [ClueWithin3.WITHIN3GREEN]: 'neutral',
-      [ClueWithin3.WITHIN3BLACK]: 'neutral',
+      FORREST_OR_DESERT: 'neutral',
+      FORREST_OR_LAKE: 'neutral',
+      FORREST_OR_SWAMP: 'neutral',
+      FORREST_OR_MOUNTAIN: 'neutral',
+      DESERT_OR_LAKE: 'neutral',
+      DESERT_OR_SWAMP: 'neutral',
+      DESERT_OR_MOUNTAIN: 'neutral',
+      LAKE_OR_SWAMP: 'neutral',
+      LAKE_OR_MOUNTAIN: 'neutral',
+      SWAMP_OR_MOUNTAIN: 'neutral',
+      WITHIN1FORREST: 'neutral',
+      WITHIN1DESERT: 'neutral',
+      WITHIN1LAKE: 'neutral',
+      WITHIN1SWAMP: 'neutral',
+      WITHIN1MOUNTAIN: 'neutral',
+      WITHIN1ANIMAL: 'neutral',
+      WITHIN2STONE: 'neutral',
+      WITHIN2SHACK: 'neutral',
+      WITHIN2COUGAR: 'neutral',
+      WITHIN2BEAR: 'neutral',
+      WITHIN3BLUE: 'neutral',
+      WITHIN3WHITE: 'neutral',
+      WITHIN3GREEN: 'neutral',
+      WITHIN3BLACK: 'neutral',
     },
     terrainBuster: {
       positive: {
-        [ClueTerrain.FORREST]: false,
-        [ClueTerrain.DESERT]: false,
-        [ClueTerrain.LAKE]: false,
-        [ClueTerrain.SWAMP]: false,
-        [ClueTerrain.MOUNTAIN]: false,
+        FORREST: false,
+        DESERT: false,
+        LAKE: false,
+        SWAMP: false,
+        MOUNTAIN: false,
       },
       negative: {
-        [ClueTerrain.FORREST]: false,
-        [ClueTerrain.DESERT]: false,
-        [ClueTerrain.LAKE]: false,
-        [ClueTerrain.SWAMP]: false,
-        [ClueTerrain.MOUNTAIN]: false,
+        FORREST: false,
+        DESERT: false,
+        LAKE: false,
+        SWAMP: false,
+        MOUNTAIN: false,
       },
     },
   }

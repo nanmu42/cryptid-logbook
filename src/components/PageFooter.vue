@@ -48,6 +48,7 @@
           我不喜欢纸质笔记（我懒，现场总是没有足够的笔，另外要动笔经常让想尝鲜的朋友望而却步），
           就做了这个工具，并且加了一些捷径功能来提高效率，这样在游戏中我就有了更多抬头聊天的机会。
         </p>
+        <p class="mt-2">这个工具是全离线的，加载后断网可用。</p>
         <p class="mt-4">
           鸣谢<br />
           Cryptid is designed by Hal Duncan and Ruth Veevers, the artwork is by Kwanchai Moriya.

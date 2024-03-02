@@ -23,9 +23,8 @@
         </NFormItem>
         <NFormItem label="你的线索">
           <FlattenedClueSelect
-            :player-clue="config.playerClue1"
+            v-model:value="config.playerClue1"
             :has-advanced-clue="config.isAdvancedMode"
-            @update="handlePlayerClue1Update"
           ></FlattenedClueSelect>
         </NFormItem>
       </div>
@@ -35,9 +34,8 @@
         </NFormItem>
         <NFormItem label="你的第一条线索">
           <FlattenedClueSelect
-            :player-clue="config.playerClue1"
+            v-model:value="config.playerClue1"
             :has-advanced-clue="config.isAdvancedMode"
-            @update="handlePlayerClue1Update"
           ></FlattenedClueSelect>
         </NFormItem>
         <NFormItem label="你的第二个颜色">
@@ -48,9 +46,8 @@
         </NFormItem>
         <NFormItem label="你的第二条线索">
           <FlattenedClueSelect
-            :player-clue="config.playerClue2"
+            v-model:value="config.playerClue2"
             :has-advanced-clue="config.isAdvancedMode"
-            @update="handlePlayerClue2Update"
           ></FlattenedClueSelect>
         </NFormItem>
       </div>
@@ -129,14 +126,6 @@ const config: Ref<Config> = ref(generateDefaultConfig())
 
 function resetConfig() {
   config.value = generateDefaultConfig()
-}
-
-function handlePlayerClue1Update(value: PlayerClue | null) {
-  config.value.playerClue1 = value
-}
-
-function handlePlayerClue2Update(value: PlayerClue | null) {
-  config.value.playerClue2 = value
 }
 
 const player2DisabledColors = computed<PlayerColor[]>(() => {

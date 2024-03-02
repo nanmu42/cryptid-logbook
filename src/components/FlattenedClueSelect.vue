@@ -15,10 +15,11 @@ import { NSelect, type SelectGroupOption, type SelectOption } from 'naive-ui'
 import { computed, watch } from 'vue'
 
 interface Props {
-  playerClue: PlayerClue | null
   clueFilter?: (clue: Clue, inverted: boolean) => boolean
   hasAdvancedClue?: boolean
 }
+
+const model = defineModel<PlayerClue | null>('value', { required: true })
 
 const props = defineProps<Props>()
 
@@ -41,6 +42,9 @@ const options = computed<Array<SelectGroupOption>>(() => {
     for (const group of groups) {
       const children: SelectOption[] = []
       for (const clue of group.clues) {
+        if (!props.hasAdvancedClue && clue === 'WITHIN3BLACK') {
+          continue
+        }
         if (props.clueFilter && !props.clueFilter(clue, inverted)) {
           continue
         }
@@ -68,15 +72,15 @@ const options = computed<Array<SelectGroupOption>>(() => {
 })
 
 const selected = computed<string | null>(() => {
-  if (!props.playerClue) {
+  if (!model.value) {
     return null
   }
 
-  if (props.playerClue.inverted) {
-    return INVERTED_PREFIX + props.playerClue.clue
+  if (model.value.inverted) {
+    return INVERTED_PREFIX + model.value.clue
   }
 
-  return props.playerClue.clue
+  return model.value.clue
 })
 
 watch(
@@ -101,7 +105,7 @@ watch(
 
 function handleUpdateValue(value: string | null) {
   if (!value) {
-    emit('update', null)
+    model.value = null
     return
   }
 
@@ -114,6 +118,6 @@ function handleUpdateValue(value: string | null) {
     clue: value as FlattenedClue,
     inverted: inverted,
   }
-  emit('update', clue)
+  model.value = clue
 }
 </script>
