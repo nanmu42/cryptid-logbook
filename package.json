@@ -1,6 +1,10 @@
 {
   "name": "cryptid-logbook",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "author": {
+    "name": "Zhennan LI",
+    "url": "https://nanmu.me/"
+  },
   "private": true,
   "type": "module",
   "scripts": {

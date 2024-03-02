@@ -21,6 +21,8 @@ export interface TerrainBusterClues {
 const clueStateList = [
   // all clue begins with this state
   'neutral',
+  // manually marked neutral so will not be autoExcluded
+  'loose',
   // manual excluded
   'excluded',
   // excluded by policy
@@ -29,7 +31,7 @@ const clueStateList = [
   'suspicious',
   // manual-labeled
   'confirmed',
-]
+] as const
 
 export type ClueState = (typeof clueStateList)[number]
 
