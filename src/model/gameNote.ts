@@ -51,6 +51,18 @@ export function generateDefaultGameNote(colors: PlayerColor[]): GameNote {
   return note
 }
 
+export function getPossiblesRemain(
+  table: RivalClue,
+  isAdvancedMode: boolean,
+  scope?: FlattenedClue[],
+): FlattenedClue[] {
+  const remains: FlattenedClue[] = []
+
+  // TODO: implement me
+
+  return remains
+}
+
 function generateDefaultRivalClues(): RivalClues {
   const clues: RivalClues = {
     in: {

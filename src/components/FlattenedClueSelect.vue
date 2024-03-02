@@ -5,11 +5,11 @@
 <script setup lang="ts">
 import type { PlayerClue } from '@/model/config'
 import {
-  getChineseClueGroups,
   type Clue,
   getChineseClueName,
   chineseInvertedPrefix,
   type FlattenedClue,
+  chineseClueGroups,
 } from '@/model/constant'
 import { NSelect, type SelectGroupOption, type SelectOption } from 'naive-ui'
 import { computed, watch } from 'vue'
@@ -30,8 +30,6 @@ const emit = defineEmits<{
 const INVERTED_PREFIX = 'NOT_'
 
 const options = computed<Array<SelectGroupOption>>(() => {
-  let groups = getChineseClueGroups(false)
-
   const options: SelectGroupOption[] = []
 
   for (const inverted of [false, true]) {
@@ -39,7 +37,7 @@ const options = computed<Array<SelectGroupOption>>(() => {
       continue
     }
 
-    for (const group of groups) {
+    for (const group of chineseClueGroups) {
       const children: SelectOption[] = []
       for (const clue of group.clues) {
         if (!props.hasAdvancedClue && clue === 'WITHIN3BLACK') {

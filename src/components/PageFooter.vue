@@ -1,12 +1,12 @@
 <template>
-  <footer class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 place-content-center">
+  <footer class="flex flex-col justify-around items-center gap-1">
     <NButton text @click="handleAbout">
       <template #icon>
         <NIcon>
-          <Question />
+          <Info />
         </NIcon>
       </template>
-      这是用来做啥的？
+      关于
     </NButton>
     <NButton text @click="handleShare">
       <template #icon>
@@ -33,7 +33,7 @@
       Copyright 2024 Zhennan LI
     </NButton>
     <ShareModal class="max-w-[480px]" v-model:show="showShareModal"></ShareModal>
-    <NModal class="max-w-[480px]" v-model:show="showAbout" preset="card" title="这是用来做啥的？">
+    <NModal class="max-w-[480px]" v-model:show="showAbout" preset="card" title="关于">
       <div>
         <p>
           我的家人和不少朋友都很喜欢<a
@@ -65,7 +65,7 @@
 <script setup lang="ts">
 import { NIcon, NButton, useMessage, NModal } from 'naive-ui'
 import ShareModal from '@/components/ShareModal.vue'
-import { Github, Qrcode, CopyrightRegular, Question } from '@vicons/fa'
+import { Github, Qrcode, CopyrightRegular, Info } from '@vicons/fa'
 import { ref } from 'vue'
 import { version as packageVersion } from '@/../package.json'
 

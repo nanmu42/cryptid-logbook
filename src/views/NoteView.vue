@@ -8,7 +8,8 @@
     class="full-height"
   >
     <SwiperSlide class="full-page">
-      <FinalClues />
+      <FinalClues :game-note="gameNote" :config="config" />
+      <NBackTop class="z-50" />
     </SwiperSlide>
     <SwiperSlide
       v-for="color in config.rivalColors"
@@ -17,6 +18,7 @@
       :style="{ backgroundColor: getColorHex(color) }"
     >
       <GameNoteComponent />
+      <NBackTop class="z-50" />
     </SwiperSlide>
   </Swiper>
 </template>
@@ -36,6 +38,7 @@ import { generateDefaultGameNote, type GameNote } from '@/model/gameNote'
 import { getColorHex } from '@/model/constant'
 import FinalClues from '@/components/FinalClues.vue'
 import GameNoteComponent from '@/components/GameNote.vue'
+import { NBackTop } from 'naive-ui'
 
 const swiperModules = [Pagination]
 const swiperPagination: PaginationOptions = {
@@ -85,6 +88,7 @@ function backgroundColorForIndex(index: number): string {
 .full-page {
   width: 100%;
   height: 100%;
+  overflow-y: auto;
 }
 
 .swiper-pagination-bullet {

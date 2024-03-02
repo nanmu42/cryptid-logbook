@@ -131,45 +131,28 @@ export function getChineseClueName(clue: Clue, inverted: boolean): string {
 export interface ClueGroup {
   key: string // unique, mainly for Vue
   name: string // human-readable
-  flattened: boolean
   clues: readonly Clue[]
 }
 
-const chineseClueGroups: ClueGroup[] = [
-  {
-    key: 'ClueTerrain',
-    name: '一种地形之中',
-    flattened: false,
-    clues: clueTerrainList,
-  },
+export const chineseClueGroups: readonly ClueGroup[] = [
   {
     key: 'ClueOneOfTwoTerrain',
     name: '两种地形之中',
-    flattened: true,
     clues: clueOneOfTwoTerrainList,
   },
   {
     key: 'ClueWithin1',
     name: '地形或动物+1',
-    flattened: true,
     clues: clueWithin1List,
   },
   {
     key: 'ClueWithin2',
     name: '地标或特定动物+2',
-    flattened: true,
     clues: clueWithin2List,
   },
   {
     key: 'ClueWithin3',
     name: '颜色+3',
-    flattened: true,
     clues: clueWithin3List,
   },
 ]
-
-export function getChineseClueGroups(includeUnflattened: boolean): ClueGroup[] {
-  return includeUnflattened
-    ? chineseClueGroups
-    : chineseClueGroups.filter((group) => group.flattened)
-}
