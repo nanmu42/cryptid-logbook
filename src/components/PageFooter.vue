@@ -22,7 +22,7 @@
           <Github />
         </NIcon>
       </template>
-      Open source on GitHub
+      Open source under MIT License
     </NButton>
     <NButton text @click="handleGreeting">
       <template #icon>
@@ -45,11 +45,16 @@
           >这个桌游，而我的忘性很大，总是需要笔记才能顺利玩下去。
         </p>
         <p class="mt-2">
-          我不喜欢纸质笔记（现场总是没有足够的笔，另外要动笔经常让想尝鲜的朋友望而却步），
-          所以就做了这个工具，同时我加了一些捷径功能来提高效率，这样我在游戏中就有了更多抬头聊天的机会。
+          我不喜欢纸质笔记（我懒，现场总是没有足够的笔，另外要动笔经常让想尝鲜的朋友望而却步），
+          就做了这个工具，并且加了一些捷径功能来提高效率，这样在游戏中我就有了更多抬头聊天的机会。
         </p>
         <p class="mt-4">
+          鸣谢<br />
           Cryptid is designed by Hal Duncan and Ruth Veevers, the artwork is by Kwanchai Moriya.
+          <br />
+          Kelly, a worthy opponent who did lots of test drive with me.
+          <br />
+          Jennier, who took me down the rabbit hole.
         </p>
       </div>
     </NModal>
@@ -61,6 +66,7 @@ import { NIcon, NButton, useMessage, NModal } from 'naive-ui'
 import ShareModal from '@/components/ShareModal.vue'
 import { Github, Qrcode, CopyrightRegular, Question } from '@vicons/fa'
 import { ref } from 'vue'
+import { version as packageVersion } from '@/../package.json'
 
 const notify = useMessage()
 
@@ -80,6 +86,11 @@ function openNewTab(url: string) {
 }
 
 function handleGreeting() {
+  if (Math.random() < 0.7) {
+    notify.info(`版本：v${packageVersion}`)
+    return
+  }
+
   const now = new Date()
   const hour = now.getHours()
 

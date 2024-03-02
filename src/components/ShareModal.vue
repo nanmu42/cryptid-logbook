@@ -9,6 +9,7 @@
       <hr />
       <p>让朋友直接扫码也可以：</p>
       <NQrCode class="m-auto" :value="hostURL" :size="240"></NQrCode>
+      <p class="mt-2">祝你们玩得尽兴！</p>
     </div>
   </NModal>
 </template>
