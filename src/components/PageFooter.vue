@@ -16,7 +16,7 @@
       </template>
       和朋友分享这个工具
     </NButton>
-    <NButton text @click="openNewTab('https://github.com/nanmu42/cryptid-logbook')">
+    <NButton text tag="a" href="https://github.com/nanmu42/cryptid-logbook" target="_blank">
       <template #icon>
         <NIcon>
           <Github />
@@ -53,7 +53,7 @@
           鸣谢<br />
           Cryptid is designed by Hal Duncan and Ruth Veevers, the artwork is by Kwanchai Moriya.
           <br />
-          Kelly, a worthy opponent who did lots of test drive with me.
+          Kelly, who did lots of test drive with me.
           <br />
           Jennier, who took me down the rabbit hole.
         </p>

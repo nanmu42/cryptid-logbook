@@ -1,19 +1,16 @@
 <template>
   <div
-    class="w-full min-h-60"
+    class="w-full min-h-60 py-6 px-2"
     :style="{ backgroundColor: getColorHex(props.color) }"
     @click="togglePlayerClueMask"
   >
-    <div
-      v-if="isShowingPlayerClue"
-      class="py-6 px-2 text-center flex flex-col items-center justify-center"
-    >
+    <div v-if="isShowingPlayerClue" class="text-center flex flex-col items-center justify-center">
       <p class="text-xl">你的线索</p>
       <p class="text-4xl mt-12">{{ maskedPlayerClue }}</p>
     </div>
-    <div v-else class="py-6 px-2 flex flex-col items-center justify-center">
-      <p class="text-xl mb-8">12个可能</p>
-      <div class="flex flex-wrap gap-2 items-center justify-start"></div>
+    <div v-else class="flex flex-col items-center justify-center">
+      <p class="text-xl">12个可能</p>
+      <div class="mt-8 flex flex-wrap gap-2 items-center justify-start"></div>
     </div>
   </div>
 </template>

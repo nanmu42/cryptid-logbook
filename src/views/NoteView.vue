@@ -19,6 +19,7 @@
     >
       <GameNoteComponent />
       <NBackTop class="z-50" />
+      <!-- TODO: 撤销和重做按钮 -->
     </SwiperSlide>
   </Swiper>
 </template>

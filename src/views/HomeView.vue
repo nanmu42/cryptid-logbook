@@ -167,4 +167,13 @@ function handleSubmit() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+h2 {
+  font-weight: bold;
+  font-size: 2.5rem;
+  margin: 2rem 0 2rem;
+  text-transform: uppercase;
+  text-align: center;
+  position: relative;
+}
+</style>
