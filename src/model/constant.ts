@@ -90,6 +90,13 @@ type ClueNames = {
   [key in Clue]: string
 }
 
+export const flattenedClueList = [
+  ...clueOneOfTwoTerrainList,
+  ...clueWithin1List,
+  ...clueWithin2List,
+  ...clueWithin3List,
+] as const
+
 const chineseClueNames: ClueNames = {
   FORREST_OR_DESERT: '森林或沙漠',
   FORREST_OR_LAKE: '森林或海洋',

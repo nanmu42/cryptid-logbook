@@ -1,4 +1,9 @@
-import { type PlayerColor, type FlattenedClue, type ClueTerrain } from './constant'
+import {
+  type PlayerColor,
+  type FlattenedClue,
+  type ClueTerrain,
+  flattenedClueList,
+} from './constant'
 
 export interface GameNote {
   clues: { [key in PlayerColor]?: RivalClues }
@@ -58,9 +63,32 @@ export function getPossiblesRemain(
 ): FlattenedClue[] {
   const remains: FlattenedClue[] = []
 
-  // TODO: implement me
+  if (scope === undefined) {
+    scope = flattenedClueList as unknown as FlattenedClue[]
+  }
+
+  for (const clue of scope) {
+    if (!isAdvancedMode && clue === 'WITHIN3BLACK') {
+      continue
+    }
+    if (!isClueStateGood(table[clue])) {
+      continue
+    }
+
+    remains.push(clue)
+  }
 
   return remains
+}
+
+export function isClueStateGood(state: ClueState): boolean {
+  switch (state) {
+    case 'excluded':
+    case 'autoExcluded':
+      return false
+    default:
+      return true
+  }
 }
 
 function generateDefaultRivalClues(): RivalClues {

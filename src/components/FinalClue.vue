@@ -13,9 +13,7 @@
     </div>
     <div v-else class="py-6 px-2 flex flex-col items-center justify-center">
       <p class="text-xl mb-8">12个可能</p>
-      <div class="flex flex-wrap gap-2 items-center justify-start">
-        <ClueTag></ClueTag>
-      </div>
+      <div class="flex flex-wrap gap-2 items-center justify-start"></div>
     </div>
   </div>
 </template>
@@ -26,7 +24,6 @@ import type { PlayerColor } from '@/model/constant'
 import { getChineseClueName, getColorHex } from '@/model/constant'
 import type { GameNote } from '@/model/gameNote'
 import { computed, ref } from 'vue'
-import ClueTag from '@/components/ClueTag.vue'
 
 interface Props {
   color: PlayerColor
