@@ -17,9 +17,8 @@
       class="full-page"
       :style="{ backgroundColor: getColorHex(color) }"
     >
-      <GameNoteComponent />
-      <NBackTop class="z-50" />
-      <!-- TODO: 撤销和重做按钮 -->
+      <GameNoteComponent :config="config" :game-note="gameNote" :color="color" />
+      <NBackTop class="z-50" right="calc(50% - 22px)" bottom="45px" />
     </SwiperSlide>
   </Swiper>
 </template>

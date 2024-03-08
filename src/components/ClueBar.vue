@@ -2,16 +2,18 @@
   <div class="flex justify-between items-center">
     <p class="text-xl">{{ text }}</p>
     <div class="pr-4 flex gap-3 items-center">
-      <NButton secondary circle :type="props.state === 'confirmed' ? 'success' : undefined">
-        <template #icon>
-          <NIcon><CheckCircle /></NIcon>
-        </template>
-      </NButton>
-      <NButton secondary circle :type="props.state === 'suspicious' ? 'warning' : undefined">
-        <template #icon>
-          <NIcon><QuestionCircle /></NIcon>
-        </template>
-      </NButton>
+      <div class="flex gap-3 items-center">
+        <NButton secondary circle :type="props.state === 'confirmed' ? 'success' : undefined">
+          <template #icon>
+            <NIcon><CheckCircle /></NIcon>
+          </template>
+        </NButton>
+        <NButton secondary circle :type="props.state === 'suspicious' ? 'warning' : undefined">
+          <template #icon>
+            <NIcon><QuestionCircle /></NIcon>
+          </template>
+        </NButton>
+      </div>
       <div class="ml-3">
         <NButton secondary size="large">
           <template #icon>
@@ -43,3 +45,5 @@ const text = computed<string>(() => {
   return getChineseClueName(props.clue, props.inverted)
 })
 </script>
+
+<style scoped></style>

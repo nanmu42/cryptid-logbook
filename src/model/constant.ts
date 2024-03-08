@@ -138,7 +138,7 @@ export function getChineseClueName(clue: Clue, inverted: boolean): string {
 export interface ClueGroup {
   key: string // unique, mainly for Vue
   name: string // human-readable
-  clues: readonly Clue[]
+  clues: readonly FlattenedClue[]
 }
 
 export const chineseClueGroups: readonly ClueGroup[] = [
