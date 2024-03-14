@@ -1,24 +1,21 @@
 <template>
   <div class="flex justify-between items-center">
     <p class="text-xl">{{ text }}</p>
-    <div class="pr-4 flex gap-3 items-center">
-      <div class="flex gap-3 items-center">
-        <NButton secondary circle :type="props.state === 'confirmed' ? 'success' : undefined">
-          <template #icon>
-            <NIcon><CheckCircle /></NIcon>
-          </template>
-        </NButton>
-        <NButton secondary circle :type="props.state === 'suspicious' ? 'warning' : undefined">
-          <template #icon>
-            <NIcon><QuestionCircle /></NIcon>
-          </template>
-        </NButton>
-      </div>
-      <div class="ml-3">
+    <div class="pr-4 flex items-center">
+      <NButton secondary circle :type="secondaryButtonType">
+        <template #icon>
+          <NIcon v-if="props.state === 'confirmed'"><CheckCircle /></NIcon>
+          <NIcon v-else-if="props.state === 'suspicious'"><QuestionCircle /></NIcon>
+          <NIcon v-else><FlagRegular /></NIcon>
+        </template>
+      </NButton>
+      <div class="ml-6">
         <NButton secondary size="large">
           <template #icon>
-            <!-- TODO: use add icon when in need -->
-            <NIcon><MinusCircle /></NIcon>
+            <NIcon v-if="props.state === 'excluded' || props.state === 'autoExcluded'">
+              <PlusCircle />
+            </NIcon>
+            <NIcon v-else><MinusCircle /></NIcon>
           </template>
         </NButton>
       </div>
@@ -28,7 +25,7 @@
 
 <script setup lang="ts">
 import { NButton, NIcon } from 'naive-ui'
-import { CheckCircle, QuestionCircle, MinusCircle } from '@vicons/fa'
+import { FlagRegular, CheckCircle, QuestionCircle, MinusCircle, PlusCircle } from '@vicons/fa'
 import { getChineseClueName, type Clue } from '@/model/constant'
 import type { ClueState } from '@/model/gameNote'
 import { computed } from 'vue'
@@ -43,6 +40,17 @@ const props = defineProps<Props>()
 
 const text = computed<string>(() => {
   return getChineseClueName(props.clue, props.inverted)
+})
+
+const secondaryButtonType = computed<'success' | 'warning' | undefined>(() => {
+  switch (props.state) {
+    case 'confirmed':
+      return 'success'
+    case 'suspicious':
+      return 'warning'
+    default:
+      return undefined
+  }
 })
 </script>
 

@@ -17,7 +17,12 @@
       class="full-page"
       :style="{ backgroundColor: getColorHex(color) }"
     >
-      <GameNoteComponent :config="config" :game-note="gameNote" :color="color" />
+      <GameNoteComponent
+        :config="config"
+        :player-clues="gameNote.clues[color]!"
+        :clue-groups="clueGroups"
+        :remained-possibilities="remainedPossibilities[color]!"
+      />
       <NBackTop class="z-50" right="calc(50% - 22px)" bottom="45px" />
     </SwiperSlide>
   </Swiper>
@@ -30,12 +35,22 @@ import 'swiper/css/pagination'
 
 import { Pagination } from 'swiper/modules'
 import { type PaginationOptions } from 'swiper/types'
-import { onBeforeMount, ref, type Ref } from 'vue'
+import { computed, onBeforeMount, ref, type Ref } from 'vue'
 import { generateDefaultConfig, type Config } from '@/model/config'
 import { persistentStorage } from '@/model/storage'
 import { useRouter } from 'vue-router'
 import { generateDefaultGameNote, type GameNote } from '@/model/gameNote'
-import { getColorHex } from '@/model/constant'
+import {
+  chineseClueGroups,
+  getColorHex,
+  type ClueGroup,
+  clueOneOfTwoTerrainList,
+  clueWithin1List,
+  clueWithin2List,
+  clueWithin3List,
+  flattenedClueList,
+  type PlayerColor,
+} from '@/model/constant'
 import FinalClues from '@/components/FinalClues.vue'
 import GameNoteComponent from '@/components/GameNote.vue'
 import { NBackTop } from 'naive-ui'
@@ -78,6 +93,71 @@ function backgroundColorForIndex(index: number): string {
 
   return getColorHex(config.value.rivalColors[index - 1])
 }
+
+const clueGroups = computed<ClueGroup[]>(() => {
+  if (config.value.isAdvancedMode) {
+    return chineseClueGroups as ClueGroup[]
+  }
+
+  const groups: ClueGroup[] = [
+    {
+      key: 'ClueOneOfTwoTerrain',
+      name: '两种地形之中',
+      clues: clueOneOfTwoTerrainList,
+    },
+    {
+      key: 'ClueWithin1',
+      name: '地形或动物+1',
+      clues: clueWithin1List,
+    },
+    {
+      key: 'ClueWithin2',
+      name: '地标或特定动物+2',
+      clues: clueWithin2List,
+    },
+    {
+      key: 'ClueWithin3',
+      name: '颜色+3',
+      clues: clueWithin3List.filter((clue) => clue !== 'WITHIN3BLACK'),
+    },
+  ]
+
+  return groups
+})
+
+const allPossibleClueNamesAtOneSide = computed(() => {
+  if (config.value.isAdvancedMode) {
+    return flattenedClueList
+  }
+
+  return flattenedClueList.filter((clue) => clue !== 'WITHIN3BLACK')
+})
+
+const remainedPossibilities = computed<{ [key in PlayerColor]?: number }>(() => {
+  const possibilities: { [key in PlayerColor]?: number } = {}
+
+  for (let [k, v] of Object.entries(gameNote.value.clues)) {
+    let count = 0
+
+    for (const name of allPossibleClueNamesAtOneSide.value) {
+      const state = v!.in[name]
+      if (state !== 'excluded' && state !== 'autoExcluded') {
+        count++
+      }
+    }
+    if (config.value.isAdvancedMode) {
+      for (const name of allPossibleClueNamesAtOneSide.value) {
+        const state = v!.notIn[name]
+        if (state !== 'excluded' && state !== 'autoExcluded') {
+          count++
+        }
+      }
+    }
+    possibilities[k as PlayerColor] = count
+  }
+
+  return possibilities
+})
 </script>
 
 <style>
