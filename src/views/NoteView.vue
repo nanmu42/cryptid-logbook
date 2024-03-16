@@ -8,7 +8,12 @@
     class="full-height"
   >
     <SwiperSlide class="full-page">
-      <FinalClues :game-note="gameNote" :config="config" />
+      <FinalClues
+        :game-note="gameNote"
+        :config="config"
+        :remained-possibilities="remainedPossibilities"
+        @game-over="handleGameOver"
+      />
       <NBackTop class="z-50" />
     </SwiperSlide>
     <SwiperSlide
@@ -60,7 +65,7 @@ import {
 } from '@/model/constant'
 import FinalClues from '@/components/FinalClues.vue'
 import GameNoteComponent from '@/components/GameNote.vue'
-import { NBackTop } from 'naive-ui'
+import { NBackTop, useDialog, type DialogOptions } from 'naive-ui'
 import {
   eventBus,
   type ClueStateChanged,
@@ -77,6 +82,7 @@ const swiperPagination: PaginationOptions = {
 }
 
 const router = useRouter()
+const dialog = useDialog()
 
 const config: Ref<Config> = ref(generateDefaultConfig())
 const rawGameNote: Ref<GameNote> = ref(generateDefaultGameNote([]))
@@ -238,6 +244,17 @@ function processEventResetGameNote(event: ResetGameNote) {
   rawGameNote.value.clues[event.playerColor] = generateDefaultRivalClues()
 
   persistentStorage.setGameNote(rawGameNote.value)
+}
+
+function handleGameOver() {
+  const opts: DialogOptions = {
+    title: '重新开始',
+    content: '确定要重新开始吗？所有笔记都会被重置。',
+    positiveText: '来吧！',
+    negativeText: '不，先等等',
+    onPositiveClick: resetAndGoHomeView,
+  }
+  dialog.warning(opts)
 }
 </script>
 

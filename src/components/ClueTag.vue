@@ -1,5 +1,5 @@
 <template>
-  <NTag :type="tagType" :bordered="false">
+  <NTag size="large">
     {{ text }}
   </NTag>
 </template>

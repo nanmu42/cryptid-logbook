@@ -27,19 +27,19 @@ export interface TerrainBusterClues {
 
 export type TerrainBusterClue = { [key in ClueTerrain]: boolean }
 
-const clueStateList = [
-  // all clue begins with this state
-  'neutral',
-  // manually marked neutral so will not be autoExcluded
-  'loose',
-  // manual excluded
-  'excluded',
-  // excluded by policy
-  'autoExcluded',
-  // manual-labeled
-  'suspicious',
+export const clueStateList = [
   // manual-labeled
   'confirmed',
+  // manual-labeled
+  'suspicious',
+  // manually marked neutral so will not be autoExcluded
+  'loose',
+  // all clue begins with this state
+  'neutral',
+  // excluded by policy
+  'autoExcluded',
+  // manual excluded
+  'excluded',
 ] as const
 
 export type ClueState = (typeof clueStateList)[number]
