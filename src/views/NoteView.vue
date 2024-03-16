@@ -19,6 +19,7 @@
     >
       <GameNoteComponent
         :config="config"
+        :player-color="color"
         :player-clues="gameNote.clues[color]!"
         :clue-groups="clueGroups"
         :remained-possibilities="remainedPossibilities[color]!"

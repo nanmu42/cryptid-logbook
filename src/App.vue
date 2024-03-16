@@ -3,6 +3,7 @@ import { RouterView } from 'vue-router'
 import {
   NConfigProvider,
   NMessageProvider,
+  NDialogProvider,
   NGlobalStyle,
   zhCN,
   dateZhCN,
@@ -12,9 +13,11 @@ import {
 
 <template>
   <NConfigProvider :locale="zhCN" :date-locale="dateZhCN" :theme="darkTheme">
-    <NMessageProvider>
-      <RouterView />
-    </NMessageProvider>
+    <NDialogProvider>
+      <NMessageProvider>
+        <RouterView />
+      </NMessageProvider>
+    </NDialogProvider>
     <NGlobalStyle />
   </NConfigProvider>
 </template>

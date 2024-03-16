@@ -11,7 +11,7 @@ import {
   type FlattenedClue,
   chineseClueGroups,
 } from '@/model/constant'
-import { NSelect, selectProps, type SelectGroupOption, type SelectOption } from 'naive-ui'
+import { NSelect, type SelectGroupOption, type SelectOption } from 'naive-ui'
 import { computed, watch } from 'vue'
 
 interface Props {
