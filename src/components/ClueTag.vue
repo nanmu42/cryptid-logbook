@@ -1,25 +1,18 @@
 <template>
-  <NTag size="large">
+  <NTag size="large" class="clue-tag">
     {{ text }}
+    <template #icon v-if="props.state === 'confirmed' || props.state === 'suspicious'">
+      <NIcon size="medium" :component="icon" />
+    </template>
   </NTag>
 </template>
 
 <script setup lang="ts">
-import {
-  clueTerrainList,
-  type Clue,
-  type ClueTerrain,
-  clueOneOfTwoTerrainList,
-  type ClueOneOfTwoTerrain,
-  clueWithin1List,
-  type ClueWithin1,
-  clueWithin2List,
-  type ClueWithin2,
-  getChineseClueName,
-} from '@/model/constant'
+import { type Clue, getChineseClueName } from '@/model/constant'
 import type { ClueState } from '@/model/gameNote'
-import { NTag } from 'naive-ui'
-import { computed } from 'vue'
+import { NIcon, NTag } from 'naive-ui'
+import { computed, type Component } from 'vue'
+import { CheckCircle, QuestionCircle } from '@vicons/fa'
 
 interface Props {
   clue: Clue
@@ -29,24 +22,24 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const tagType = computed<'success' | 'warning' | 'error' | 'info' | undefined>(() => {
-  if (clueTerrainList.includes(props.clue as ClueTerrain)) {
-    return 'success'
-  }
-  if (clueOneOfTwoTerrainList.includes(props.clue as ClueOneOfTwoTerrain)) {
-    return 'warning'
-  }
-  if (clueWithin1List.includes(props.clue as ClueWithin1)) {
-    return 'error'
-  }
-  if (clueWithin2List.includes(props.clue as ClueWithin2)) {
-    return 'info'
-  }
-
-  return undefined
-})
-
 const text = computed<string>(() => {
   return getChineseClueName(props.clue, props.inverted)
 })
+
+const icon = computed<Component | undefined>(() => {
+  switch (props.state) {
+    case 'confirmed':
+      return CheckCircle
+    case 'suspicious':
+      return QuestionCircle
+    default:
+      return undefined
+  }
+})
 </script>
+
+<style>
+.clue-tag .n-tag__content {
+  font-size: 16px;
+}
+</style>

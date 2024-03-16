@@ -112,7 +112,7 @@ import {
   type DialogOptions,
 } from 'naive-ui'
 import { generateDefaultConfig, type Config, type PlayerClue } from '@/model/config'
-import { computed, ref, watch, type Ref } from 'vue'
+import { computed, ref, watch, type Ref, onBeforeMount } from 'vue'
 import { LaughWinkRegular } from '@vicons/fa'
 import ColorSelect from '@/components/ColorSelect.vue'
 import FlattenedClueSelect from '@/components/FlattenedClueSelect.vue'
@@ -128,6 +128,17 @@ const dialog = useDialog()
 const router = useRouter()
 const fullscreen = useFullscreen()
 const SW = useRegisterSW()
+
+onBeforeMount(() => {
+  const gameStartedAt = persistentStorage.getGameStartedAt()
+  const loadedConfig = persistentStorage.getConfig()
+  const loadedGameNote = persistentStorage.getGameNote()
+
+  if (gameStartedAt && loadedConfig && loadedGameNote) {
+    router.replace({ name: 'note' })
+    return
+  }
+})
 
 watch(
   SW.needRefresh,

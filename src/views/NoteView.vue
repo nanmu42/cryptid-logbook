@@ -1,37 +1,39 @@
 <template>
-  <Swiper
-    :slides-per-view="1"
-    :loop="true"
-    :centeredSlides="true"
-    :pagination="swiperPagination"
-    :modules="swiperModules"
-    class="full-height"
-  >
-    <SwiperSlide class="full-page">
-      <FinalClues
-        :game-note="gameNote"
-        :config="config"
-        :remained-possibilities="remainedPossibilities"
-        @game-over="handleGameOver"
-      />
-    </SwiperSlide>
-    <SwiperSlide
-      v-for="color in config.rivalColors"
-      :key="color"
-      class="full-page"
-      :style="{ backgroundColor: getColorHex(color) }"
+  <div>
+    <Swiper
+      :slides-per-view="1"
+      :loop="true"
+      :centeredSlides="true"
+      :pagination="swiperPagination"
+      :modules="swiperModules"
+      class="full-height"
+      @slide-change="handleSlideChange"
     >
-      <GameNoteComponent
-        :config="config"
-        :player-color="color"
-        :player-clues="gameNote.clues[color]!"
-        :clue-groups="clueGroups"
-        :remained-possibilities="remainedPossibilities[color]!"
-      />
-      <!-- TODO: multiple NBackTop is showing -->
-      <NBackTop class="z-50" right="calc(50% - 22px)" bottom="45px" />
-    </SwiperSlide>
-  </Swiper>
+      <SwiperSlide class="full-page" id="slide-final-clues">
+        <FinalClues
+          :game-note="gameNote"
+          :config="config"
+          :remained-possibilities="remainedPossibilities"
+          @game-over="handleGameOver"
+        />
+      </SwiperSlide>
+      <SwiperSlide
+        v-for="color in config.rivalColors"
+        :key="color"
+        class="full-page"
+        :style="{ backgroundColor: getColorHex(color) }"
+      >
+        <GameNoteComponent
+          :config="config"
+          :player-color="color"
+          :player-clues="gameNote.clues[color]!"
+          :clue-groups="clueGroups"
+          :remained-possibilities="remainedPossibilities[color]!"
+        />
+      </SwiperSlide>
+    </Swiper>
+    <BackToTop class="z-50" :target="backToTopTarget"></BackToTop>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -40,7 +42,7 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 
 import { Pagination } from 'swiper/modules'
-import { type PaginationOptions } from 'swiper/types'
+import { type PaginationOptions, Swiper as SwiperType } from 'swiper/types'
 import { computed, onBeforeMount, onBeforeUnmount, ref, type Ref } from 'vue'
 import { generateDefaultConfig, type Config } from '@/model/config'
 import { persistentStorage } from '@/model/storage'
@@ -65,7 +67,8 @@ import {
 } from '@/model/constant'
 import FinalClues from '@/components/FinalClues.vue'
 import GameNoteComponent from '@/components/GameNote.vue'
-import { NBackTop, useDialog, type DialogOptions } from 'naive-ui'
+import BackToTop from '@/components/BackToTop.vue'
+import { useDialog, type DialogOptions } from 'naive-ui'
 import {
   eventBus,
   type ClueStateChanged,
@@ -79,6 +82,12 @@ const swiperPagination: PaginationOptions = {
   clickable: true,
   renderBullet: (index, className) =>
     `<span style="background-color:${backgroundColorForIndex(index)}" class="${className}"></span>`,
+}
+
+const backToTopTarget: Ref<HTMLElement | undefined> = ref(undefined)
+
+function handleSlideChange(swiper: SwiperType): void {
+  backToTopTarget.value = swiper.slides[swiper.snapIndex]
 }
 
 const router = useRouter()
