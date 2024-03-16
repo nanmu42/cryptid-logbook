@@ -1,1 +1,7 @@
 @import './base.css';
+
+html,
+body {
+  /* disable chrome's pull-to-refresh effect */
+  overscroll-behavior: none;
+}

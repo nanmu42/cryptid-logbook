@@ -14,7 +14,6 @@
         :remained-possibilities="remainedPossibilities"
         @game-over="handleGameOver"
       />
-      <NBackTop class="z-50" />
     </SwiperSlide>
     <SwiperSlide
       v-for="color in config.rivalColors"
@@ -29,6 +28,7 @@
         :clue-groups="clueGroups"
         :remained-possibilities="remainedPossibilities[color]!"
       />
+      <!-- TODO: multiple NBackTop is showing -->
       <NBackTop class="z-50" right="calc(50% - 22px)" bottom="45px" />
     </SwiperSlide>
   </Swiper>

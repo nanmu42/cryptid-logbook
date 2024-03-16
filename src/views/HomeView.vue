@@ -108,9 +108,11 @@ import {
   NCollapseItem,
   NIcon,
   useMessage,
+  useDialog,
+  type DialogOptions,
 } from 'naive-ui'
 import { generateDefaultConfig, type Config, type PlayerClue } from '@/model/config'
-import { computed, ref, type Ref } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 import { LaughWinkRegular } from '@vicons/fa'
 import ColorSelect from '@/components/ColorSelect.vue'
 import FlattenedClueSelect from '@/components/FlattenedClueSelect.vue'
@@ -118,9 +120,35 @@ import type { PlayerColor } from '@/model/constant'
 import PageFooter from '@/components/PageFooter.vue'
 import { persistentStorage } from '@/model/storage'
 import { useRouter } from 'vue-router'
+import { useFullscreen } from '@vueuse/core'
+import { useRegisterSW } from 'virtual:pwa-register/vue'
 
 const notify = useMessage()
+const dialog = useDialog()
 const router = useRouter()
+const fullscreen = useFullscreen()
+const SW = useRegisterSW()
+
+watch(
+  SW.needRefresh,
+  (needRefresh) => {
+    if (!needRefresh) {
+      // relax
+      return
+    }
+
+    const opts: DialogOptions = {
+      title: '版本升级',
+      content: '新版本已加载，升级需要1秒钟。:D',
+      positiveText: '起飞！',
+      onPositiveClick() {
+        SW.updateServiceWorker()
+      },
+    }
+    dialog.info(opts)
+  },
+  { immediate: true },
+)
 
 const config: Ref<Config> = ref(generateDefaultConfig())
 
@@ -163,6 +191,7 @@ function handleSubmit() {
     return
   }
 
+  fullscreen.enter()
   router.replace({ name: 'note' })
 }
 </script>

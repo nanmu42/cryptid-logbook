@@ -63,8 +63,8 @@ export function checkAndCleanConfig(c: Config) {
   }
 
   if (c.isTwoPlayerMode) {
-    if (c.rivalColors.length !== 1) {
-      throw new Error('双人模式下，对手只能有1个')
+    if (c.rivalColors.length !== 2) {
+      throw new Error('双人模式下，对手只能有正好2个颜色')
     }
   } else {
     if (c.rivalColors.length < 2) {

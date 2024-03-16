@@ -15,7 +15,7 @@
       :remained-possibilities="props.remainedPossibilities[color]"
     ></FinalClue>
     <div class="mt-12 flex justify-center items-center">
-      <NButton size="large" @click="handleGameOver">点我重开一局</NButton>
+      <NButton size="large" @click="handleGameOver">重开一局</NButton>
     </div>
     <PageFooter class="pt-16 pb-8"></PageFooter>
   </div>
