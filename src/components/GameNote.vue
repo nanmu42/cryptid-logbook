@@ -11,12 +11,14 @@
     </div>
     <div v-if="props.config.shortcuts.globalSwitch && props.config.shortcuts.terrainBuster">
       <TerrainBuster
-        polarity="negative"
-        @update="handleNegativeTerrainBusterChanged"
+        polarity="positive"
+        :terrain-buster-clue="props.playerClues.terrainBuster.positive"
+        @update="handlePositiveTerrainBusterChanged"
       ></TerrainBuster>
       <TerrainBuster
-        polarity="positive"
-        @update="handlePositiveTerrainBusterChanged"
+        polarity="negative"
+        :terrain-buster-clue="props.playerClues.terrainBuster.negative"
+        @update="handleNegativeTerrainBusterChanged"
       ></TerrainBuster>
     </div>
     <template v-for="inverted in invertedCases" :key="inverted">
@@ -52,13 +54,12 @@
 </template>
 
 <script setup lang="ts">
-import type { ClueState, RivalClue, RivalClues } from '@/model/gameNote'
+import type { ClueState, RivalClue, RivalClues, TerrainBusterClue } from '@/model/gameNote'
 import ClueBar from './ClueBar.vue'
 import type { Config } from '@/model/config'
 import {
   chineseInvertedPrefix,
   type ClueGroup,
-  type ClueTerrain,
   type FlattenedClue,
   type PlayerColor,
 } from '@/model/constant'
@@ -87,7 +88,7 @@ const invertedCases = computed<boolean[]>(() => {
   return [false]
 })
 
-const isExcludedShown = ref(true)
+const isExcludedShown = ref(false)
 
 function handleHideExcluded() {
   isExcludedShown.value = !isExcludedShown.value
@@ -124,7 +125,7 @@ function handleResetAll() {
   dialog.warning(opts)
 }
 
-function handlePositiveTerrainBusterChanged(payload: { [key in ClueTerrain]: boolean }) {
+function handlePositiveTerrainBusterChanged(payload: TerrainBusterClue) {
   eventBus.emit('terrainBusterChanged', {
     playerColor: props.playerColor,
     polarity: 'positive',
@@ -132,7 +133,7 @@ function handlePositiveTerrainBusterChanged(payload: { [key in ClueTerrain]: boo
   })
 }
 
-function handleNegativeTerrainBusterChanged(payload: { [key in ClueTerrain]: boolean }) {
+function handleNegativeTerrainBusterChanged(payload: TerrainBusterClue) {
   eventBus.emit('terrainBusterChanged', {
     playerColor: props.playerColor,
     polarity: 'negative',

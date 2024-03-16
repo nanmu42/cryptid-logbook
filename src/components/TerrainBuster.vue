@@ -1,7 +1,7 @@
 <template>
   <div class="terrain-buster">
     <h3>{{ title }}</h3>
-    <NCheckboxGroup @update:value="handleUpdateValue">
+    <NCheckboxGroup :value="value" @update:value="handleUpdateValue">
       <NSpace item-style="display: flex;">
         <NCheckbox size="large" value="FORREST" label="森林" />
         <NCheckbox size="large" value="DESERT" label="沙漠" />
@@ -15,17 +15,19 @@
 
 <script setup lang="ts">
 import type { ClueTerrain } from '@/model/constant'
+import type { TerrainBusterClue } from '@/model/gameNote'
 import { NCheckbox, NCheckboxGroup, NSpace } from 'naive-ui'
 import { computed } from 'vue'
 
 interface Props {
   polarity: 'positive' | 'negative'
+  terrainBusterClue: TerrainBusterClue
 }
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
-  update: [value: { [key in ClueTerrain]: boolean }]
+  update: [value: TerrainBusterClue]
 }>()
 
 const title = computed<string>(() => {
@@ -36,8 +38,19 @@ const title = computed<string>(() => {
   return '地形上有方块'
 })
 
+const value = computed<string[]>(() => {
+  const result: string[] = []
+  for (let [k, v] of Object.entries(props.terrainBusterClue)) {
+    if (v) {
+      result.push(k as string)
+    }
+  }
+
+  return result
+})
+
 function handleUpdateValue(value: (string | number)[]) {
-  const payload: { [key in ClueTerrain]: boolean } = {
+  const payload: TerrainBusterClue = {
     FORREST: false,
     DESERT: false,
     LAKE: false,

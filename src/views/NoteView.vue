@@ -36,11 +36,17 @@ import 'swiper/css/pagination'
 
 import { Pagination } from 'swiper/modules'
 import { type PaginationOptions } from 'swiper/types'
-import { computed, onBeforeMount, ref, type Ref } from 'vue'
+import { computed, onBeforeMount, onBeforeUnmount, ref, type Ref } from 'vue'
 import { generateDefaultConfig, type Config } from '@/model/config'
 import { persistentStorage } from '@/model/storage'
 import { useRouter } from 'vue-router'
-import { generateDefaultGameNote, type GameNote } from '@/model/gameNote'
+import {
+  generateDefaultGameNote,
+  type GameNote,
+  generateDefaultRivalClues,
+  excludePlayerClueInPlace,
+  executeTerrainsBusterInPlace,
+} from '@/model/gameNote'
 import {
   chineseClueGroups,
   getColorHex,
@@ -55,6 +61,13 @@ import {
 import FinalClues from '@/components/FinalClues.vue'
 import GameNoteComponent from '@/components/GameNote.vue'
 import { NBackTop } from 'naive-ui'
+import {
+  eventBus,
+  type ClueStateChanged,
+  type ResetGameNote,
+  type TerrainBusterChanged,
+} from '@/model/eventBus'
+import { deepCopy } from '@/model/helper'
 
 const swiperModules = [Pagination]
 const swiperPagination: PaginationOptions = {
@@ -66,7 +79,28 @@ const swiperPagination: PaginationOptions = {
 const router = useRouter()
 
 const config: Ref<Config> = ref(generateDefaultConfig())
-const gameNote: Ref<GameNote> = ref(generateDefaultGameNote([]))
+const rawGameNote: Ref<GameNote> = ref(generateDefaultGameNote([]))
+
+const gameNote = computed<GameNote>(() => {
+  if (!config.value.shortcuts.globalSwitch) {
+    return rawGameNote.value
+  }
+
+  const gameNote = deepCopy(rawGameNote.value)
+  if (config.value.shortcuts.excludePlayerClues) {
+    excludePlayerClueInPlace(gameNote.clues, config.value.playerClue1!)
+
+    if (config.value.isTwoPlayerMode) {
+      excludePlayerClueInPlace(gameNote.clues, config.value.playerClue2!)
+    }
+  }
+
+  if (config.value.shortcuts.terrainBuster) {
+    executeTerrainsBusterInPlace(gameNote.clues)
+  }
+
+  return gameNote
+})
 
 onBeforeMount(() => {
   const gameStartedAt = persistentStorage.getGameStartedAt()
@@ -79,7 +113,17 @@ onBeforeMount(() => {
   }
 
   config.value = loadedConfig
-  gameNote.value = loadedGameNote
+  rawGameNote.value = loadedGameNote
+
+  eventBus.on('clueStateChanged', processEventClueStateChanged)
+  eventBus.on('terrainBusterChanged', processEventTerrainBusterChanged)
+  eventBus.on('resetGameNote', processEventResetGameNote)
+})
+
+onBeforeUnmount(() => {
+  eventBus.off('clueStateChanged', processEventClueStateChanged)
+  eventBus.off('terrainBusterChanged', processEventTerrainBusterChanged)
+  eventBus.off('resetGameNote', processEventResetGameNote)
 })
 
 function resetAndGoHomeView() {
@@ -159,6 +203,42 @@ const remainedPossibilities = computed<{ [key in PlayerColor]?: number }>(() => 
 
   return possibilities
 })
+
+function processEventClueStateChanged(event: ClueStateChanged) {
+  const clues = rawGameNote.value.clues[event.playerColor]!
+
+  if (event.inverted) {
+    clues.notIn[event.clue] = event.toState
+    return
+  }
+
+  clues.in[event.clue] = event.toState
+
+  persistentStorage.setGameNote(rawGameNote.value)
+}
+
+function processEventTerrainBusterChanged(event: TerrainBusterChanged) {
+  const buster = rawGameNote.value.clues[event.playerColor]!.terrainBuster
+
+  switch (event.polarity) {
+    case 'positive':
+      buster.positive = event.payload
+      break
+    case 'negative':
+      buster.negative = event.payload
+      break
+    default:
+      throw new Error(`processEventTerrainBusterChanged: Invalid polarity '${event.polarity}'`)
+  }
+
+  persistentStorage.setGameNote(rawGameNote.value)
+}
+
+function processEventResetGameNote(event: ResetGameNote) {
+  rawGameNote.value.clues[event.playerColor] = generateDefaultRivalClues()
+
+  persistentStorage.setGameNote(rawGameNote.value)
+}
 </script>
 
 <style>

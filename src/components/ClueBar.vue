@@ -1,5 +1,8 @@
 <template>
-  <div class="flex justify-between items-center">
+  <div
+    class="flex justify-between items-center clue-bar"
+    :class="{ 'faded-bar': shouldFadeClue(props.state) }"
+  >
     <p class="text-xl">{{ text }}</p>
     <div class="pr-4 flex items-center">
       <NButton secondary circle :type="secondaryButtonType" @click="handleFlag">
@@ -88,7 +91,6 @@ function handleFlag() {
 function nextDecideState(old: ClueState): ClueState {
   switch (old) {
     case 'excluded':
-      return 'neutral'
     case 'autoExcluded':
       return 'loose'
     default:
@@ -105,6 +107,18 @@ function handleDecide() {
     toState: nextDecideState(props.state),
   })
 }
+
+function shouldFadeClue(state: ClueState): boolean {
+  return state === 'excluded' || state === 'autoExcluded'
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+.clue-bar {
+  transition: opacity 150ms ease;
+}
+
+.faded-bar {
+  opacity: 0.2;
+}
+</style>

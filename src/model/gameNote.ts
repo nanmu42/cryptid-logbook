@@ -1,8 +1,10 @@
+import type { PlayerClue } from './config'
 import {
   type PlayerColor,
   type FlattenedClue,
   type ClueTerrain,
   flattenedClueList,
+  clueOneOfTwoTerrainList,
 } from './constant'
 
 export interface GameNote {
@@ -19,9 +21,11 @@ export interface RivalClues {
 }
 
 export interface TerrainBusterClues {
-  positive: { [key in ClueTerrain]: boolean }
-  negative: { [key in ClueTerrain]: boolean }
+  positive: TerrainBusterClue
+  negative: TerrainBusterClue
 }
+
+export type TerrainBusterClue = { [key in ClueTerrain]: boolean }
 
 const clueStateList = [
   // all clue begins with this state
@@ -91,7 +95,7 @@ export function isClueStateGood(state: ClueState): boolean {
   }
 }
 
-function generateDefaultRivalClues(): RivalClues {
+export function generateDefaultRivalClues(): RivalClues {
   const clues: RivalClues = {
     in: {
       FORREST_OR_DESERT: 'neutral',
@@ -164,4 +168,123 @@ function generateDefaultRivalClues(): RivalClues {
   }
 
   return clues
+}
+
+function stateCanBeAutoExclude(state: ClueState) {
+  return state === 'neutral'
+}
+
+function autoExcludeClueInPlaceIfApplicable(clues: RivalClue, targets: FlattenedClue[]) {
+  for (const target of targets) {
+    if (!stateCanBeAutoExclude(clues[target])) {
+      continue
+    }
+
+    clues[target] = 'autoExcluded'
+  }
+}
+
+function autoExcludeClueIfNameContainsInPlaceIfApplicable(clues: RivalClue, substr: string) {
+  for (const [k, v] of Object.entries(clues)) {
+    if (k.includes(substr) && stateCanBeAutoExclude(v)) {
+      clues[k as FlattenedClue] = 'autoExcluded'
+    }
+  }
+}
+
+export function excludePlayerClueInPlace(
+  rivalClues: { [key in PlayerColor]?: RivalClues },
+  playerClue: PlayerClue,
+) {
+  for (const [_, rivalClue] of Object.entries(rivalClues)) {
+    if (stateCanBeAutoExclude(rivalClue.in[playerClue.clue])) {
+      rivalClue.in[playerClue.clue] = 'autoExcluded'
+    }
+    if (stateCanBeAutoExclude(rivalClue.notIn[playerClue.clue])) {
+      rivalClue.notIn[playerClue.clue] = 'autoExcluded'
+    }
+  }
+}
+
+export function executeTerrainsBusterInPlace(rivalClues: { [key in PlayerColor]?: RivalClues }) {
+  for (const [_, rivalClue] of Object.entries(rivalClues)) {
+    _executeTerrainsBusterInPlace(rivalClue)
+  }
+}
+
+function countTrues(terrainBusterClue: TerrainBusterClue): number {
+  let count = 0
+  for (const [_, v] of Object.entries(terrainBusterClue)) {
+    if (v) {
+      count++
+    }
+  }
+
+  return count
+}
+
+function _executeTerrainsBusterInPlace(rivalClues: RivalClues) {
+  const p = rivalClues.terrainBuster.positive
+  const n = rivalClues.terrainBuster.negative
+  const positives = countTrues(p)
+  const negatives = countTrues(n)
+
+  // fast paths
+
+  // 1 circle and 1 block on the same kind of terrains
+  if (positives > 0 && negatives > 0) {
+    switch (true) {
+      case p.FORREST && n.FORREST:
+      case p.DESERT && n.DESERT:
+      case p.LAKE && n.LAKE:
+      case p.SWAMP && n.SWAMP:
+      case p.MOUNTAIN && n.MOUNTAIN:
+        autoExcludeClueInPlaceIfApplicable(
+          rivalClues.in,
+          clueOneOfTwoTerrainList as unknown as FlattenedClue[],
+        )
+        autoExcludeClueInPlaceIfApplicable(
+          rivalClues.notIn,
+          clueOneOfTwoTerrainList as unknown as FlattenedClue[],
+        )
+    }
+  }
+
+  // >= 3 circle/block on different kinds of terrains
+  if (positives >= 3) {
+    autoExcludeClueInPlaceIfApplicable(
+      rivalClues.in,
+      clueOneOfTwoTerrainList as unknown as FlattenedClue[],
+    )
+  }
+  if (negatives >= 3) {
+    autoExcludeClueInPlaceIfApplicable(
+      rivalClues.notIn,
+      clueOneOfTwoTerrainList as unknown as FlattenedClue[],
+    )
+  }
+
+  // >= 4 circle/block on different kinds of terrains
+  if (positives >= 4 || negatives >= 4) {
+    autoExcludeClueInPlaceIfApplicable(
+      rivalClues.in,
+      clueOneOfTwoTerrainList as unknown as FlattenedClue[],
+    )
+    autoExcludeClueInPlaceIfApplicable(
+      rivalClues.notIn,
+      clueOneOfTwoTerrainList as unknown as FlattenedClue[],
+    )
+  }
+
+  // normal path
+  for (const [k, v] of Object.entries(p)) {
+    if (v) {
+      autoExcludeClueIfNameContainsInPlaceIfApplicable(rivalClues.notIn, k)
+    }
+  }
+  for (const [k, v] of Object.entries(n)) {
+    if (v) {
+      autoExcludeClueIfNameContainsInPlaceIfApplicable(rivalClues.in, k)
+    }
+  }
 }

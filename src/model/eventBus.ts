@@ -1,6 +1,6 @@
 import mitt from 'mitt'
 import type { ClueTerrain, FlattenedClue, PlayerColor } from './constant'
-import type { ClueState } from './gameNote'
+import type { ClueState, TerrainBusterClue } from './gameNote'
 
 type Events = {
   clueStateChanged: ClueStateChanged
@@ -10,10 +10,11 @@ type Events = {
 
 export const eventBus = mitt<Events>()
 
-// Uncomment me to enable debug
-eventBus.on('*', (e: any, payload: any) => {
-  console.log('eventBus debug:', e, payload)
-})
+if (import.meta.env.MODE === 'development') {
+  eventBus.on('*', (e: any, payload: any) => {
+    console.info('eventBus:', e, payload)
+  })
+}
 
 export interface ClueStateChanged {
   playerColor: PlayerColor
@@ -26,7 +27,7 @@ export interface ClueStateChanged {
 export interface TerrainBusterChanged {
   playerColor: PlayerColor
   polarity: 'positive' | 'negative'
-  payload: { [key in ClueTerrain]: boolean }
+  payload: TerrainBusterClue
 }
 
 export interface ResetGameNote {
