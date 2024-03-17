@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { PLAYER_COLORS, PlayerColor, getChineseColorName, getColorHex } from '@/model/constant'
+import { PLAYER_COLORS, type PlayerColor, getChineseColorName, getColorHex } from '@/model/constant'
 import { NAvatar, NSelect, NTag, type SelectRenderLabel, type SelectRenderTag } from 'naive-ui'
 import { computed, h, watch } from 'vue'
 
@@ -24,7 +24,7 @@ const props = defineProps<Props>()
 const model = defineModel<null | PlayerColor | PlayerColor[]>('value')
 
 const options = computed(() => {
-  let scope = PLAYER_COLORS
+  let scope = PLAYER_COLORS as unknown as PlayerColor[]
   if (props.disabledColors) {
     scope = scope.filter((color) => !props.disabledColors!.includes(color))
   }

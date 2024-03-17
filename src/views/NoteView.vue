@@ -42,7 +42,7 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 
 import { Pagination } from 'swiper/modules'
-import { type PaginationOptions, Swiper as SwiperType } from 'swiper/types'
+import { type PaginationOptions } from 'swiper/types'
 import { computed, onBeforeMount, onBeforeUnmount, ref, type Ref } from 'vue'
 import { generateDefaultConfig, type Config } from '@/model/config'
 import { persistentStorage } from '@/model/storage'
@@ -86,7 +86,7 @@ const swiperPagination: PaginationOptions = {
 
 const backToTopTarget: Ref<HTMLElement | undefined> = ref(undefined)
 
-function handleSlideChange(swiper: SwiperType): void {
+function handleSlideChange(swiper: any): void {
   backToTopTarget.value = swiper.slides[swiper.snapIndex]
 }
 
